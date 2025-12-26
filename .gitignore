@@ -1,0 +1,29 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Virtual Environments
+venv/
+.env
+
+# Logs & Runtime
+chat_log.json
+*.log
+
+# Uploads (PRIVATE DATA)
+uploads/
+ai_backend/uploads/
+document_portal/uploads/
+
+# Events (lokale Daten)
+document_portal/events/events.json
+
+# IDEs
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db

@@ -1,0 +1,247 @@
+/* =========================================================
+   LOKALE, RECHTSSICHERE VARIANTE B – OHNE EXTERNE DIENSTE
+   Font: Orbitron (lokal, SIL OFL)
+   ========================================================= */
+
+/* ---------- Lokaler Font ---------- */
+@font-face {
+    font-family: 'Orbitron';
+    src: url('../fonts/Orbitron-Regular.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+/* ---------- Reset / Basis ---------- */
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Orbitron', Arial, Helvetica, sans-serif;
+    background-image: url('../../images/background.jpg');
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-attachment: fixed;
+    color: #00ff00;
+}
+
+/* ---------- Titel / Header ---------- */
+h1, h2, h3 {
+    margin: 10px 0;
+    font-weight: bold;
+}
+
+/* ---------- Clock ---------- */
+.clock {
+    position: absolute;
+    top: 10px;
+    right: 20px;
+    font-size: 36px;
+    color: #00ff00;
+    background: rgba(0,0,0,0.5);
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid #00ff00;
+    text-shadow: 0 0 5px #00ff00;
+}
+
+/* ---------- Holo Header ---------- */
+.jarvis-container {
+    position: relative;
+    width: 100%;
+    text-align: center;
+    margin-top: 50px;
+}
+
+.reactor-circle {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 180px;
+    height: 180px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(0,255,0,0.3) 0%, rgba(0,255,0,0) 70%);
+    box-shadow: 0 0 30px #00ff00, 0 0 60px #00ff00 inset;
+    animation: rotateCircle 4s linear infinite;
+    z-index: 1;
+}
+
+@keyframes rotateCircle {
+    0% { transform: translate(-50%, -50%) rotate(0deg); }
+    100% { transform: translate(-50%, -50%) rotate(360deg); }
+}
+
+.jarvis-holo {
+    position: relative;
+    z-index: 2;
+    font-size: 60px;
+    letter-spacing: 5px;
+    color: #00ff00;
+    text-shadow:
+        0 0 8px #00ff00,
+        0 0 20px #33ff33,
+        0 0 40px #66ff66,
+        0 0 60px #00ff00;
+    animation: holoPulse 2s ease-in-out infinite,
+               holoVibrate 0.1s infinite,
+               holoGlitch 2.5s infinite;
+}
+
+/* Puls */
+@keyframes holoPulse {
+    0% { text-shadow: 0 0 8px #00ff00; }
+    50% { text-shadow: 0 0 30px #66ff66; }
+    100% { text-shadow: 0 0 8px #00ff00; }
+}
+
+/* Vibration */
+@keyframes holoVibrate {
+    0%,100% { transform: translateX(0); }
+    25% { transform: translateX(1px); }
+    50% { transform: translateX(-1px); }
+    75% { transform: translateX(0.5px); }
+}
+
+/* Glitch */
+@keyframes holoGlitch {
+    0% { clip-path: inset(0 0 0 0); }
+    20% { clip-path: inset(10% 0 70% 0); }
+    40% { clip-path: inset(0 0 0 0); }
+    60% { clip-path: inset(15% 0 30% 0); }
+    100% { clip-path: inset(0 0 0 0); }
+}
+
+/* Scanline */
+.jarvis-holo::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+        rgba(0,255,0,0) 0%,
+        rgba(0,255,0,0.15) 50%,
+        rgba(0,255,0,0) 100%
+    );
+    animation: scanline 2.5s linear infinite;
+}
+
+@keyframes scanline {
+    0% { transform: translateY(-100%); }
+    100% { transform: translateY(100%); }
+}
+
+/* ---------- Layout ---------- */
+.container {
+    display: flex;
+    margin-top: 40px;
+}
+
+/* Sidebar */
+.sidebar {
+    width: 30%;
+    padding: 20px;
+    background-color: rgba(0,0,0,0.55);
+    height: calc(100vh - 40px);
+    overflow-y: auto;
+    border-right: 1px solid rgba(0,255,0,0.4);
+}
+
+/* Sidebar Einträge */
+.sidebar-entry {
+    margin: 4px 0;
+    user-select: none;
+}
+
+.sidebar-entry:hover {
+    background: rgba(0,255,0,0.1);
+    border-radius: 6px;
+}
+
+.folder-icon,
+.file-icon {
+    font-size: 18px;
+}
+
+.folder-link,
+.file-link {
+    color: #b4ffb4;
+    text-decoration: none;
+}
+
+/* ---------- Buttons ---------- */
+button,
+.back-button {
+    padding: 10px 15px;
+    border-radius: 8px;
+    background: rgba(0,255,0,0.2);
+    color: #00ff00;
+    border: 1px solid #00ff00;
+    cursor: pointer;
+    font-family: inherit;
+}
+
+button:hover,
+.back-button:hover {
+    background: #00ff00;
+    color: #000;
+    box-shadow: 0 0 15px #00ff00;
+}
+
+/* ---------- Kalender ---------- */
+.calendar {
+    position: absolute;
+    top: 120px;
+    right: 20px;
+    background: rgba(0,0,0,0.6);
+    border: 1px solid rgba(0,255,0,0.5);
+    border-radius: 8px;
+    padding: 10px;
+    width: 260px;
+}
+
+.calendar-days {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 3px;
+}
+
+.day {
+    padding: 5px;
+    text-align: center;
+    border: 1px solid rgba(0,255,0,0.5);
+    border-radius: 4px;
+    background: rgba(255,255,255,0.1);
+    cursor: pointer;
+    position: relative;
+}
+
+.day.has-event {
+    border: 2px solid red;
+    box-shadow: 0 0 8px red;
+}
+
+.day-events {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background: rgba(0,0,0,0.9);
+    border: 1px solid #00ff00;
+    padding: 5px;
+    z-index: 10;
+}
+
+/* ---------- Forms ---------- */
+input,
+textarea {
+    width: 100%;
+    padding: 8px;
+    margin: 6px 0;
+    background: rgba(255,255,255,0.1);
+    border: 1px solid #00ff00;
+    color: #00ff00;
+    border-radius: 4px;
+    font-family: inherit;
+}

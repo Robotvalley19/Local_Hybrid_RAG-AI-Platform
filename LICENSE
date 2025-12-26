@@ -1,0 +1,44 @@
+Apache License
+Version 2.0, January 2004
+http://www.apache.org/licenses/
+
+Copyright (c) 2025 Robotvalley19
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this project except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+This project, "Local Hybrid RAG AI Platform", includes code, scripts, PHP front-end,
+Python AI backend, static assets, and all related documentation.
+
+Unless required by applicable law or agreed to in writing, this project is
+distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
+either express or implied. See the License for the specific language governing
+permissions and limitations under the License.
+
+### Key Permissions and Conditions
+
+1. **Commercial and Personal Use**: You may use, copy, modify, merge, publish, distribute,
+   sublicense, and/or sell copies of this project, including both backend and frontend,
+   provided you comply with the License.
+
+2. **Redistribution**: Redistributions of this project, in source or binary form,
+   must include this License and give credit to the original author (Robotvalley19).
+
+3. **Modifications**: You may modify the code, add features, or create derivative works,
+   but you must clearly indicate changes made from the original.
+
+4. **No Warranty**: This project is provided "as is", without warranty of any kind,
+   including fitness for a particular purpose or non-infringement.
+
+5. **Notice**: You may not remove or obscure the copyright notice or license from
+   redistributed copies or substantial portions of this project.
+
+6. **Patent Grant**: This License also provides a patent license for contributions included
+   in this project, as detailed in the full Apache License 2.0.
+
+---
+
+For full details, please refer to the official Apache License 2.0: http://www.apache.org/licenses/LICENSE-2.0

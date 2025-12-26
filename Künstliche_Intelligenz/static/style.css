@@ -1,0 +1,239 @@
+/* Lokale Orbitron Schrift einbinden */
+@font-face {
+    font-family: 'Orbitron';
+    src: url('fonts/Orbitron-Regular.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  height: auto;
+  min-height: 100vh;
+  font-family: 'Orbitron', sans-serif;
+  color: #00fffc;
+  overflow-x: hidden;
+  overflow-y: auto;
+  background: url('/static/images/kollaborative-roboter.png') no-repeat center center fixed;
+  background-size: cover;
+  overscroll-behavior: contain; /* verhindert Springen bei Tastatur */
+}
+
+/* animierter Hintergrundverlauf */
+body::before {
+  content: "";
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: linear-gradient(270deg, #00fffc, #001f2f, #00fffc);
+  background-size: 600% 600%;
+  animation: gradientShift 20s ease infinite;
+  z-index: -1;
+}
+
+@keyframes gradientShift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* Glitch Header */
+.glitch-header {
+  font-size: 2.5em;
+  margin-bottom: 10px;
+  text-shadow: 0 0 10px #00fffc, 0 0 30px #00fffc;
+  animation: glitch 2s infinite;
+  text-align: center;
+}
+
+@keyframes glitch {
+  0% { text-shadow: 2px 2px #ff6f00, -2px -2px #00fffc; }
+  20% { text-shadow: -2px 2px #ff6f00, 2px -2px #00fffc; }
+  40% { text-shadow: 2px -2px #ff6f00, -2px 2px #00fffc; }
+  60% { text-shadow: -2px -2px #ff6f00, 2px 2px #00fffc; }
+  100% { text-shadow: 0 0 10px #00fffc, 0 0 30px #00fffc; }
+}
+
+/* Hauptcontainer */
+.container {
+  max-width: 1000px;
+  margin: 20px auto;
+  padding: 20px;
+  border-radius: 10px;
+  background: rgba(0,0,0,0.45);
+  box-shadow: 0 0 20px #00fffc;
+  padding-bottom: 180px; /* Platz für Tastatur am Tablet */
+}
+
+/* Chatbox */
+#chatbox {
+  border-radius: 20px;
+  max-height: 400px;
+  overflow-y: auto;
+  padding: 15px;
+  background: rgba(0,0,0,0.40);
+  box-shadow: 0 0 15px #00fffc inset;
+  margin-bottom: 15px;
+}
+
+/* Nachrichten */
+.message.user {
+  text-align: right;
+  color: #ff6f00;
+  text-shadow: 0 0 10px #ff6f00;
+}
+
+.message.bot {
+  text-align: left;
+  color: #00fffc;
+  text-shadow: 0 0 10px #00fffc;
+  background: rgba(0,0,0,0);
+  padding: 6px 10px;
+  margin: 5px 0;
+  border-left: 4px solid #4caf50;
+  white-space: pre-wrap;
+}
+
+.message.web_results {
+  background: rgba(74,144,226,0.2);
+  border-left: 4px solid #4a90e2;
+  padding: 6px 10px;
+  margin: 5px 0;
+  font-size: 0.9em;
+}
+
+.message.doc_info {
+  background: rgba(255,245,157,0.3);
+  border-left: 4px solid #fbc02d;
+  padding: 6px 10px;
+  margin: 5px 0;
+  font-size: 0.9em;
+}
+
+/* Pre-Tags in Nachrichten */
+.message pre {
+  white-space: pre-wrap;
+  background: rgba(0,0,0,0.2);
+  padding: 10px;
+  border-radius: 5px;
+  overflow-x: auto;
+  font-family: 'Courier New', monospace;
+  color: #00fffc;
+}
+
+/* Eingabe- und Upload-Bereich */
+.input-upload-area {
+  display: flex;
+  gap: 10px;
+  align-items: flex-end;
+  flex-wrap: wrap;
+  position: relative; /* statt fixed -> funktioniert mit Tastatur */
+  bottom: 0;
+  width: 100%;
+  background: rgba(0,0,0,0.4);
+  backdrop-filter: blur(3px);
+  border-radius: 10px;
+  padding: 10px;
+  z-index: 3;
+}
+
+.input-area {
+  flex: 2;
+  display: flex;
+  gap: 10px;
+}
+
+.input-area textarea {
+  flex: 1;
+  padding: 10px;
+  border-radius: 5px;
+  border: 1px solid #00fffc;
+  background: rgba(0,0,0,0.3);
+  color: #00fffc;
+  resize: none;
+  font-weight: bold;
+  min-height: 40px;
+  overflow-y: auto;
+  font-size: 1em;
+}
+
+.upload-area {
+  flex: 1;
+  display: flex;
+  gap: 5px;
+  align-items: center;
+}
+
+.upload-area input[type="file"] {
+  flex: 2;
+  padding: 5px;
+  border-radius: 5px;
+  border: 1px solid #00fffc;
+  background: rgba(0,0,0,0.3);
+  color: #00fffc;
+}
+
+button {
+  padding: 10px 15px;
+  border: none;
+  border-radius: 5px;
+  background: rgba(0,255,252,0.2);
+  color: #00fffc;
+  cursor: pointer;
+  font-weight: bold;
+  transition: all 0.3s ease;
+}
+
+button:hover {
+  background: rgba(0,255,252,0.5);
+}
+
+/* Denk-/Schreibanzeige */
+.thinking {
+  text-align: center;
+  font-size: 1.2em;
+  color: #00fffc;
+  margin: 10px 0;
+  text-shadow: 0 0 10px #00fffc;
+  transition: opacity 0.4s ease;
+}
+.hidden {
+  opacity: 0;
+  visibility: hidden;
+}
+
+/* Systemmonitoring */
+.system-status {
+  background: rgba(0,255,255,0.05);
+  border: 1px solid rgba(0,255,255,0.3);
+  padding: 10px;
+  border-radius: 12px;
+  margin-bottom: 15px;
+}
+
+.status-bar {
+  margin-bottom: 8px;
+}
+
+.bar-bg {
+  width: 100%;
+  height: 10px;
+  background: rgba(0,255,252,0.1);
+  border-radius: 5px;
+}
+
+.bar-fill {
+  height: 10px;
+  background: #00fffc;
+  border-radius: 5px;
+  width: 0%;
+  transition: width 0.5s ease;
+}
+
+.cpu-temp ul,
+.gpu-status ul {
+  list-style: none;
+  padding-left: 15px;
+  margin: 5px 0;
+}

@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <title>Künstliche Intelligenz - JARVIS Style</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+  <!-- Lokale Orbitron Schrift -->
+  <style>
+  @font-face {
+      font-family: 'Orbitron';
+      src: url('{{ url_for("static", filename="fonts/Orbitron-Regular.ttf") }}') format('truetype');
+      font-weight: normal;
+      font-style: normal;
+  }
+
+  body, h1, h2, h3, h4, h5, h6, label, textarea, select, button {
+      font-family: 'Orbitron', sans-serif;
+  }
+  </style>
+</head>
+<body>
+<div class="container">
+  <div class="header">
+    <h1 class="glitch-header">Künstliche Intelligenz</h1>
+
+    <label for="model_select">Modell auswählen:</label>
+    <select id="model_select">
+      {% for model in models %}
+      <option value="{{ model }}" {% if model==model_name %}selected{% endif %}>{{ model }}</option>
+      {% endfor %}
+    </select>
+
+    <label for="mode_select">Betriebsmodus:</label>
+    <select id="mode_select">
+      <option value="local">Lokal (KI)</option>
+      <option value="hybrid">Hybrid (Web + KI)</option>
+    </select>
+  </div>
+
+  <!-- Systemstatus -->
+  <div class="system-status" id="system-status">
+    <h2>🖥️ Systemstatus</h2>
+    <div class="status-bar">
+      <label>CPU: <span id="cpu_percent">{{ cpu_percent }}</span>%</label>
+      <div class="bar-bg"><div id="cpu_bar" class="bar-fill"></div></div>
+    </div>
+    <div class="cpu-temp">
+      <label>CPU Temperatur:</label>
+      <ul id="cpu_temps">
+        {% for temp in cpu_temps %}<li>{{ temp }}</li>{% endfor %}
+      </ul>
+    </div>
+    <div class="status-bar">
+      <label>RAM: <span id="memory_used">{{ memory_used }}</span> / <span id="memory_total">{{ memory_total }}</span> GB (<span id="memory_percent">{{ memory_percent }}</span> %)</label>
+      <div class="bar-bg"><div id="ram_bar" class="bar-fill"></div></div>
+    </div>
+    <div class="gpu-status">
+      <label>GPU:</label>
+      <ul id="gpu_info">
+        {% for gpu in gpu_info %}
+        {% if gpu.error %}
+        <li>{{ gpu.error }}</li>
+        {% else %}
+        <li>GPU {{ gpu.index }} ({{ gpu.name }}): {{ gpu.auslastung }}% – {{ gpu.speicher_verwendet }}/{{ gpu.speicher_gesamt }} MiB – {{ gpu.temperatur }} °C
+          <div class="bar-bg"><div class="bar-fill" style="width: {{ gpu.auslastung }}%"></div></div>
+        </li>{% endif %}{% endfor %}
+      </ul>
+    </div>
+    <p><b>API-Status:</b> <span id="api_status">
+      {% if api_ok %}✅ <span style="color:lime;">{{ api_msg }}</span>{% else %}⚠️ <span style="color:red;">{{ api_msg }}</span>{% endif %}
+    </span></p>
+  </div>
+
+  <!-- Chat -->
+  <div id="chatbox">
+    {% for chat in chat_history %}
+    <div class="message user">Du: {{ chat.user }}</div>
+    <div class="message bot"><pre>{{ chat.bot }}</pre></div>
+    {% endfor %}
+  </div>
+
+  <div id="thinking" class="thinking hidden">💭 KI denkt nach...</div>
+
+  <!-- Eingabe + Upload -->
+  <div class="input-upload-area">
+    <div class="input-area">
+      <textarea id="user_input" placeholder="Schreibe deine Nachricht..." rows="1"></textarea>
+      <button id="sendBtn">Senden</button>
+      <button id="clearChatBtn">Chat löschen</button>
+    </div>
+</div>
+
+<script>
+const textarea = document.getElementById('user_input');
+const thinking = document.getElementById('thinking');
+const chatbox = document.getElementById('chatbox');
+
+textarea.addEventListener('input', () => {
+  textarea.style.height = 'auto';
+  textarea.style.height = textarea.scrollHeight + 'px';
+});
+
+document.getElementById('sendBtn').addEventListener('click', async () => {
+  const message = textarea.value.trim();
+  if (!message) return;
+  chatbox.innerHTML += `<div class="message user">Du: ${message}</div>`;
+  textarea.value = ''; textarea.style.height = 'auto';
+  thinking.classList.remove('hidden'); thinking.innerText = "💭 KI denkt nach...";
+
+  const selectedModel = document.getElementById('model_select').value;
+  const mode = document.getElementById('mode_select').value;
+
+  const response = await fetch('/ask', {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({message, model: selectedModel, mode})
+  });
+  const data = await response.json();
+
+  thinking.innerText = "✍️ KI schreibt...";
+  setTimeout(() => {
+    thinking.classList.add('hidden');
+    const botDiv = document.createElement('div');
+    botDiv.className = 'message bot';
+    botDiv.innerHTML = '<pre></pre>';
+    chatbox.appendChild(botDiv);
+    const pre = botDiv.querySelector('pre');
+    let i = 0;
+    function typeWriter() {
+      if (i < data.response.length) {
+        pre.innerHTML += data.response.charAt(i).replace(/</g,"&lt;").replace(/>/g,"&gt;");
+        i++; setTimeout(typeWriter, 20);
+      } else { chatbox.scrollTop = chatbox.scrollHeight; }
+    }
+    typeWriter();
+  }, 500);
+});
+
+// Systemstatus live
+async function updateSystemStatus() {
+  try {
+    const res = await fetch('/status'); const d = await res.json();
+    document.getElementById('cpu_percent').innerText = d.cpu_percent;
+    document.getElementById('ram_bar').style.width = d.memory_percent + '%';
+    document.getElementById('cpu_bar').style.width = d.cpu_percent + '%';
+    document.getElementById('memory_used').innerText = d.memory_used;
+    document.getElementById('memory_total').innerText = d.memory_total;
+    document.getElementById('memory_percent').innerText = d.memory_percent;
+    document.getElementById('cpu_temps').innerHTML = d.cpu_temps.map(t => `<li>${t}</li>`).join('');
+    document.getElementById('gpu_info').innerHTML = d.gpu_info.map(g => g.error ? `<li>${g.error}</li>` :
+      `<li>GPU ${g.index} (${g.name}): ${g.auslastung} % – ${g.speicher_verwendet}/${g.speicher_gesamt} MiB – ${g.temperatur} °C
+      <div class="bar-bg"><div class="bar-fill" style="width: ${g.auslastung}%"></div></div></li>`).join('');
+    document.getElementById('api_status').innerHTML = d.api_ok ?
+      `✅ <span style="color:lime;">${d.api_msg}</span>` :
+      `⚠️ <span style="color:red;">${d.api_msg}</span>`;
+  } catch (e) { console.error('Status-Update-Fehler:', e); }
+}
+setInterval(updateSystemStatus, 3000);
+
+// Chat löschen
+document.getElementById('clearChatBtn').addEventListener('click', async () => {
+  if (!confirm("Willst du wirklich nur den Chat löschen?")) return;
+  const res = await fetch('/clear_chat', { method: 'POST' }); const data = await res.json();
+  alert(data.message); if (data.status === 'ok') { chatbox.innerHTML = ''; }
+});
+
+</script>
+</body>
+</html>
